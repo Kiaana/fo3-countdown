@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>珠珠 ♡ 小花 - 见面倒计时</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .flower {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .flower:nth-child(odd) {
+            animation-delay: 1.5s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+        
+        .heart-pulse {
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #fef7ed 0%, #fff5f5 50%, #fdf2f8 100%);
+        }
+        
+        .countdown-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 192, 203, 0.2);
+        }
+        
+        .sparkle {
+            animation: sparkle 2s ease-in-out infinite;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen overflow-hidden">
+    <!-- 背景装饰花朵 -->
+    <div class="fixed inset-0 pointer-events-none">
+        <div class="flower absolute top-10 left-10 text-4xl">🌸</div>
+        <div class="flower absolute top-20 right-20 text-3xl">🌺</div>
+        <div class="flower absolute bottom-20 left-20 text-5xl">🌹</div>
+        <div class="flower absolute bottom-32 right-16 text-4xl">🌸</div>
+        <div class="flower absolute top-1/3 left-1/4 text-3xl">🌺</div>
+        <div class="flower absolute top-2/3 right-1/3 text-4xl">🌹</div>
+        
+        <!-- 闪烁星星 -->
+        <div class="sparkle absolute top-16 right-1/4 text-2xl">✨</div>
+        <div class="sparkle absolute bottom-40 left-1/3 text-xl">⭐</div>
+        <div class="sparkle absolute top-1/2 right-12 text-2xl">💫</div>
+    </div>
+
+    <div class="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <div class="countdown-card rounded-3xl p-8 max-w-lg w-full shadow-2xl">
+            <!-- 标题部分 -->
+            <div class="text-center mb-8">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <span class="text-4xl">🌹</span>
+                    <h1 class="text-3xl font-bold text-rose-600">珠珠 ♡ 小花</h1>
+                    <span class="text-4xl">🌹</span>
+                </div>
+                <p class="text-rose-400 text-lg font-medium">我们的甜蜜见面倒计时</p>
+                <div class="flex justify-center items-center gap-2 mt-3">
+                    <span class="heart-pulse text-pink-500 text-2xl">💕</span>
+                    <span class="text-sm text-rose-300">距离下次相见还有...</span>
+                    <span class="heart-pulse text-pink-500 text-2xl">💕</span>
+                </div>
+            </div>
+
+            <!-- 倒计时显示 -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="text-center">
+                    <div class="bg-gradient-to-br from-rose-100 to-pink-100 rounded-2xl p-4 shadow-lg border border-rose-200">
+                        <div id="days" class="text-3xl font-bold text-rose-600">00</div>
+                        <div class="text-sm text-rose-400 mt-1">天</div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="bg-gradient-to-br from-pink-100 to-rose-100 rounded-2xl p-4 shadow-lg border border-pink-200">
+                        <div id="hours" class="text-3xl font-bold text-pink-600">00</div>
+                        <div class="text-sm text-pink-400 mt-1">小时</div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="bg-gradient-to-br from-rose-100 to-pink-100 rounded-2xl p-4 shadow-lg border border-rose-200">
+                        <div id="minutes" class="text-3xl font-bold text-rose-600">00</div>
+                        <div class="text-sm text-rose-400 mt-1">分钟</div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="bg-gradient-to-br from-pink-100 to-rose-100 rounded-2xl p-4 shadow-lg border border-pink-200">
+                        <div id="seconds" class="text-3xl font-bold text-pink-600">00</div>
+                        <div class="text-sm text-pink-400 mt-1">秒</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 设置见面时间 -->
+            <div class="text-center mb-6">
+                <div class="bg-white/60 rounded-2xl p-4 border border-rose-200">
+                    <label class="block text-rose-600 font-medium mb-2">设置我们的见面时间 💕</label>
+                    <input type="datetime-local" id="meetingTime" 
+                           class="bg-white/80 border border-rose-200 rounded-xl px-4 py-2 text-rose-600 focus:border-rose-400 focus:outline-none">
+                    <button onclick="setCountdown()" 
+                            class="ml-2 bg-gradient-to-r from-rose-400 to-pink-400 text-white px-4 py-2 rounded-xl hover:from-rose-500 hover:to-pink-500 transition-all duration-300 font-medium">
+                        开始倒计时 🌹
+                    </button>
+                </div>
+            </div>
+
+            <!-- 底部装饰 -->
+            <div class="text-center">
+                <div class="flex justify-center items-center gap-2 mb-3">
+                    <span class="text-2xl">🌹</span>
+                    <span class="text-rose-400 text-sm">愿我们的爱情如花朵般美丽绽放</span>
+                    <span class="text-2xl">🌹</span>
+                </div>
+                <div class="text-xs text-rose-300">
+                    Made with 💕 by 珠珠 for 小花
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let countdownInterval;
+        let targetDate = null;
+
+        function setCountdown() {
+            const dateInput = document.getElementById('meetingTime');
+            if (!dateInput.value) {
+                alert('请选择见面时间！💕');
+                return;
+            }
+            
+            targetDate = new Date(dateInput.value);
+            if (targetDate <= new Date()) {
+                alert('请选择未来的时间哦！🌹');
+                return;
+            }
+            
+            // 保存到本地存储
+            localStorage.setItem('meetingTime', dateInput.value);
+            
+            updateCountdown();
+            if (countdownInterval) clearInterval(countdownInterval);
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        function updateCountdown() {
+            if (!targetDate) return;
+            
+            const now = new Date();
+            const diff = targetDate - now;
+            
+            if (diff <= 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                clearInterval(countdownInterval);
+                
+                // 添加庆祝效果
+                document.body.innerHTML += `
+                    <div class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+                        <div class="bg-white rounded-3xl p-8 text-center max-w-md mx-4">
+                            <div class="text-6xl mb-4">🎉</div>
+                            <h2 class="text-2xl font-bold text-rose-600 mb-2">时间到啦！</h2>
+                            <p class="text-rose-400 mb-4">珠珠和小花终于可以见面了！</p>
+                            <div class="text-4xl">💕🌹💕</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        // 页面加载时恢复之前设置的时间
+        window.addEventListener('load', function() {
+            const savedTime = localStorage.getItem('meetingTime');
+            if (savedTime) {
+                document.getElementById('meetingTime').value = savedTime;
+                targetDate = new Date(savedTime);
+                if (targetDate > new Date()) {
+                    updateCountdown();
+                    countdownInterval = setInterval(updateCountdown, 1000);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
